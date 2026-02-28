@@ -13,6 +13,7 @@ What this script demonstrates:
 This is intentionally compact and pedagogical, not production RL infrastructure.
 """
 
+import argparse
 import copy
 import math
 import random
@@ -225,20 +226,30 @@ def evaluate(policy: PolicyNet, n_tasks: int, max_steps: int, device: torch.devi
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--updates", type=int, default=300)
+    parser.add_argument("--tasks-per-update", type=int, default=32)
+    parser.add_argument("--group-size", type=int, default=8)
+    parser.add_argument("--max-steps", type=int, default=8)
+    parser.add_argument("--lr", type=float, default=3e-4)
+    parser.add_argument("--clip-eps", type=float, default=0.2)
+    parser.add_argument("--kl-beta", type=float, default=0.02)
+    args = parser.parse_args()
+
     torch.manual_seed(42)
     random.seed(42)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # --- Hyperparams (small, educational) ---
-    updates = 300
-    tasks_per_update = 32      # number of different prompts/tasks per update
-    group_size = 8             # trajectories sampled per task (GRPO grouping)
-    max_steps = 8
+    updates = args.updates
+    tasks_per_update = args.tasks_per_update
+    group_size = args.group_size
+    max_steps = args.max_steps
 
-    lr = 3e-4
-    clip_eps = 0.2
-    kl_beta = 0.02
+    lr = args.lr
+    clip_eps = args.clip_eps
+    kl_beta = args.kl_beta
 
     policy = PolicyNet().to(device)
     ref_policy = copy.deepcopy(policy).to(device).eval()  # fixed reference

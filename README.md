@@ -1,23 +1,33 @@
 # minimal-grpo-pytorch
 
-Minimal educational implementation of agentic RL with GRPO in a **single file** using PyTorch only.
+Minimal educational implementation of agentic RL with GRPO in a **single file** using PyTorch.
 
-## File
+## Core file
 - `grpo_single_file.py`
 
-## What it shows
-- Multi-step agent behavior in a toy environment (LineWorld)
-- Grouped rollouts per task
-- Relative advantages within each group (GRPO-style)
-- PPO-style clipping objective
-- KL penalty to frozen reference policy
-
-## Run
+## Run directly
 ```bash
 python3 grpo_single_file.py
 ```
 
-## Notes
-- This is intentionally tiny and didactic.
-- No frameworks, no logging stack, no dataset loaders.
-- Great for reading line-by-line and modifying.
+## Real MCP + Docker setup
+This repo now includes a real MCP server wrapper:
+- `mcp_server.py` (FastMCP server)
+- `Dockerfile`
+- `docker-compose.yml`
+
+### 1) Build + run MCP server
+```bash
+docker compose up --build
+```
+
+Server runs on:
+- `http://localhost:8000/mcp`
+
+### 2) Available MCP tools
+- `run_training(updates, tasks_per_update, group_size, max_steps, lr)`
+- `project_summary()`
+
+### Notes
+- Educational and intentionally minimal.
+- No logging stack, no trainer framework, no external RL libs.
